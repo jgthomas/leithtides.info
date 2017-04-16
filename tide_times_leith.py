@@ -26,10 +26,10 @@ low_tide = re.findall(LT_MATCH, tide_data)
 def tide_message(times):
     if len(times) == 2:
         first, second = times
-        msg = f'low tide in leith is at {first} and at {second}'
+        msg = 'low tide in leith is at {} and at {}'.format(first, second)
     else:
         first, *_ = times
-        msg = f'low tide in leith is at {first}'
+        msg = 'low tide in leith is at {}'.format(first)
     return msg
 
 
