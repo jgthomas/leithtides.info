@@ -2,19 +2,19 @@
 server {
         listen 80;
         listen [::]:80;
-        server_name alexa.jamesgthomas.com www.alexa.jamesgthomas.com;
+        server_name tides.jamesgthomas.com www.tides.jamesgthomas.com;
         return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name alexa.jamesgthomas.com www.alexa.jamesgthomas.com;
+    server_name tides.jamesgthomas.com www.tides.jamesgthomas.com;
 
     include snippets/ssl-params.conf;
-    include snippets/ssl-alexa.conf;
+    include snippets/ssl-tides.conf;
 
     location / {
         include uwsgi_params;
-        uwsgi_pass unix:///var/www/alexa/reddit_news/reddit_news.sock;
+        uwsgi_pass unix:///var/www/alexa/tide_times_leith/tide_times_leith.sock;
     }
 }
