@@ -17,7 +17,7 @@ URL = 'https://www.tidetimes.org.uk/leith-tide-times.rss'
 
 
 def get_tide_times(url):
-    tide = feedparser(url)
+    tide = feedparser.parse(url)
     tide_data = tide['entries'][0]['summary']
     high_tide = re.findall(HT_MATCH, tide_data)
     low_tide = re.findall(LT_MATCH, tide_data)
