@@ -2,7 +2,7 @@
 
 import re
 import feedparser
-from flask import Flask
+from flask import Flask, render_template
 from flask_ask import Ask, statement
 
 
@@ -33,6 +33,12 @@ def tide_message(tides):
         first, *_ = low
         msg = 'low tide in leith is at {}'.format(first)
     return msg
+
+
+@app.route('/web')
+def show_tides():
+    low_tides, high_tides = get_tide_times(URL)
+    return render_template('base.html', low_tides=low_tides, high_tides= high_tides)
 
 
 @ask.launch
