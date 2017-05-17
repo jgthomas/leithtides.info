@@ -7,7 +7,7 @@ from flask_ask import Ask, statement
 
 
 app = Flask(__name__)
-ask = Ask(app, "/")
+ask = Ask(app, "/alexa_skill")
 
 
 HT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - High Tide')
@@ -35,7 +35,7 @@ def tide_message(tides):
     return msg
 
 
-@app.route('/web')
+@app.route('/')
 def show_tides():
     low_tides, high_tides = get_tide_times(URL)
     return render_template('base.html', low_tides=low_tides, high_tides= high_tides)
