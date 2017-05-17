@@ -1,3 +1,4 @@
+/* Top level */
 html, body {
         height: 100%;
         width: 100%;
@@ -15,17 +16,8 @@ body {
         background-attachment: fixed;
 }
 
-.title {
-        text-align: center;
-        font-weight: bold;
-        color:#8dc6ff;
-}
 
-.subtitle {
-        text-align: center;
-        color: #B0CCE8;
-}
-
+/* Content */
 #container {
         margin: auto;
         display: flex;
@@ -35,9 +27,15 @@ body {
         text-align: center;
 }
 
-#welcome {
+#title-box {
         flex: 0 0 100%;
         opacity: 0;
+}
+
+.title {
+        text-align: center;
+        font-weight: bold;
+        color:#8dc6ff;
 }
 
 .tide-box {
@@ -50,6 +48,11 @@ body {
         background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,
                     rgba(249,249,249,1) 47%,
                     rgba(242,242,242,1) 100%);
+}
+
+.subtitle {
+        text-align: center;
+        color: #B0CCE8;
 }
 
 .time {
