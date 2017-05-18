@@ -4,7 +4,11 @@ import re
 import json
 import feedparser
 
-from constants import URL, LT_MATCH, HT_MATCH, TIDE_FILE
+from constants import URL, TIDE_FILE
+
+
+HT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - High Tide')
+LT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - Low Tide')
 
 
 def save_to_json(filename, words):

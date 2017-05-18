@@ -1,27 +1,38 @@
 
 
-import re
-import feedparser
+#import re
+import json
+#import feedparser
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
+from constants import TIDE_FILE
+
 
 app = Flask(__name__)
+
 ask = Ask(app, "/alexa_skill")
 
 
-HT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - High Tide')
-LT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - Low Tide')
+#HT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - High Tide')
+#LT_MATCH = re.compile(r'([0-9][0-9]:[0-9][0-9]) - Low Tide')
+#
+#URL = 'https://www.tidetimes.org.uk/leith-tide-times.rss'
 
-URL = 'https://www.tidetimes.org.uk/leith-tide-times.rss'
+
+def load_from_json(filename):
+    """ Get data from JSON file. """
+    with open(filename, 'r') as infile:
+        todays_words = json.load(infile)
+    return todays_words
 
 
-def get_tide_times(url):
-    tide = feedparser.parse(url)
-    tide_data = tide['entries'][0]['summary']
-    high_tide = re.findall(HT_MATCH, tide_data)
-    low_tide = re.findall(LT_MATCH, tide_data)
-    return (low_tide, high_tide)
+#def get_tide_times(url):
+#    tide = feedparser.parse(url)
+#    tide_data = tide['entries'][0]['summary']
+#    high_tide = re.findall(HT_MATCH, tide_data)
+#    low_tide = re.findall(LT_MATCH, tide_data)
+#    return (low_tide, high_tide)
 
 
 def tide_message(tides):
@@ -37,7 +48,8 @@ def tide_message(tides):
 
 @app.route('/')
 def show_tides():
-    low_tides, high_tides = get_tide_times(URL)
+    #low_tides, high_tides = get_tide_times(URL)
+    low_tides, high_tides = load_from_json(TIDE_FILE)
     return render_template('base.html', low_tides=low_tides, high_tides=high_tides)
 
 

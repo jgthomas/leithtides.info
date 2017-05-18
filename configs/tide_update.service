@@ -1,0 +1,9 @@
+[Unit]
+Description=Get today's tide data
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/leithtides.info/html
+Environment="PATH=/home/walljames/Python/VirtualEnvs/flask/bin"
+ExecStart=/home/walljames/Python/VirtualEnvs/flask/bin/python3 tide_update.py 
+ExecStartPost=/usr/bin/touch /var/www/leithtides.info/html/reload_me.txt

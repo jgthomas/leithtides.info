@@ -1,0 +1,10 @@
+[Unit]
+Description=Get today's tide data
+
+[Timer]
+OnCalendar=*-*-* 00:15:00
+Persistent=True
+Unit=tide_update.service
+
+[Install]
+WantedBy=timers.target
