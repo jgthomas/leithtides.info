@@ -2,7 +2,10 @@
 server {
         listen 80;
         listen [::]:80;
+        
+        root /var/www/leithtides.info/html;
         server_name leithtides.info www.leithtides.info;
+        
         return 301 https://$server_name$request_uri;
 }
 
