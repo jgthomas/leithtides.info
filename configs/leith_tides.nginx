@@ -17,6 +17,6 @@ server {
 
     location / {
         include uwsgi_params;
-        uwsgi_pass unix:///var/www/alexa/tide_times_leith/tide_times_leith.sock;
+        uwsgi_pass unix:///var/www/leithtides.info/html/tide_times_leith.sock;
     }
 }
