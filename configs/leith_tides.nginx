@@ -8,6 +8,8 @@ server {
 
 server {
     listen 443 ssl;
+
+    root /var/www/leithtides.info/html;
     server_name leithtides.info www.leithtides.info;
 
     include snippets/ssl-params.conf;
