@@ -1,9 +1,11 @@
 
 
 import json
+import os
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
+import tide_update
 from constants import TIDE_FILE
 
 
@@ -12,11 +14,19 @@ app = Flask(__name__)
 ask = Ask(app, "/alexa_skill")
 
 
-def load_from_json(filename):
-    """ Get data from JSON file. """
+def load_tide_data(filename):
+    """
+    Load tide data from file.
+
+    If file does not exist, call the update
+    module and create file, then load.
+
+    """
+    if not os.path.isfile(filename):
+        tide_update.main()
     with open(filename, 'r') as infile:
-        todays_words = json.load(infile)
-    return todays_words
+        todays_tides = json.load(infile)
+    return todays_tides
 
 
 def tide_message(tides):
@@ -32,13 +42,13 @@ def tide_message(tides):
 
 @app.route('/')
 def show_tides():
-    low_tides, high_tides = load_from_json(TIDE_FILE)
+    low_tides, high_tides = load_tide_data(TIDE_FILE)
     return render_template('base.html', low_tides=low_tides, high_tides=high_tides)
 
 
 @ask.launch
 def tide_report():
-    tides = load_from_json(TIDE_FILE)
+    tides = load_tide_data(TIDE_FILE)
     welcome_msg = tide_message(tides)
     return statement(welcome_msg)
 
