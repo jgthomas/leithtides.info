@@ -38,7 +38,7 @@ def tide_message(tides):
 @app.route('/')
 def show_tides():
     low_tides, high_tides = get_tide_times(URL)
-    return render_template('base.html', low_tides=low_tides, high_tides= high_tides)
+    return render_template('base.html', low_tides=low_tides, high_tides=high_tides)
 
 
 @ask.launch
