@@ -55,7 +55,8 @@ def show_tides():
 
 @ask.launch
 def tide_report():
-    tides = get_tide_times(URL)
+    #tides = get_tide_times(URL)
+    tides = load_from_json(TIDE_FILE)
     welcome_msg = tide_message(tides)
     return statement(welcome_msg)
 
