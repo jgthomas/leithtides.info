@@ -1,5 +1,5 @@
 [Unit]
-Description=uWSGI instance to serve tide_times_leith
+Description=uWSGI instance to serve Leith Tides 
 After=network.target
 
 [Service]
@@ -7,7 +7,7 @@ User=walljames
 Group=www-data
 WorkingDirectory=/var/www/leithtides.info/html
 Environment="PATH=/home/walljames/Python/VirtualEnvs/flask/bin"
-ExecStart=/home/walljames/Python/VirtualEnvs/flask/bin/uwsgi --ini /var/www/leithtides.info/html/ttl.ini
+ExecStart=/home/walljames/Python/VirtualEnvs/flask/bin/uwsgi --ini leith_tides.ini
 
 [Install]
 WantedBy=multi-user.target
