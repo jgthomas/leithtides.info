@@ -79,7 +79,7 @@ body {
 
 
 /* Modify for desktop: */
-@media only screen and (min-device-width: 1600px) {
+@media only screen and (min-device-width: 961px) {
 
         body { 
                 font-size: 3em;
@@ -90,13 +90,13 @@ body {
         }
 
         .tide-box {
-                min-width: 500px;
+                min-width: 300px;
         }
 }
 
-@media only screen and (max-device-width: 1280px) {
+@media only screen and (min-device-width: 1600px) {
 
         .tide-box {
-                min-width: 300px;
+                min-width: 500px;
         }
 }
