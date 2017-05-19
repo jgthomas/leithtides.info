@@ -46,28 +46,36 @@ def weight_tides(tides):
     first_tide, second_tide = tides
     first_weight = 0
     second_weight = 0
-    next_tide = 4 * 3600
-    peak_start = dt.datetime(1900, 1, 1, 8, 59)
-    peak_end = dt.datetime(1900, 1, 1, 21, 59)
+    next_tide = 4 * (60 * 60)
+    day_start = dt.datetime(1900, 1, 1, 4, 59)
+    day_end = dt.datetime(1900, 1, 1, 21, 59)
     now = normalise_now()
 
-    # Which is closer to now
+    # 1. Prefer tides closer to present time
     if abs(now - first_tide) < abs(now - second_tide):
         first_weight += 1
+        print("1st is closer to now: 1 point")
     else:
         second_weight += 1
+        print("2nd is closer to now: 1 point")
 
-    # Are they at a 'peak' time
-    if first_tide > peak_start and first_tide < peak_end:
+    # 2. Prefer tides during the day
+    if first_tide > day_start and first_tide < day_end:
         first_weight += 1
-    if second_tide > peak_start and second_tide < peak_end:
+        print("1st is during day: 1 point")
+    if second_tide > day_start and second_tide < day_end:
         second_weight += 1
+        print("2nd is during day: 1 point")
 
-    # Are they 'too close' to a high/low tide
-    #if abs(now - first_tide) < abs(first_tide - dt.timedelta(seconds=next_tide)):
-    #    first_weight += 1
-    #if abs(now - second_tide) < abs(second_tide - dt.timedelta(seconds=next_tide)):
-    #    first_weight += 1
+    # 3. Prefer upcoming tides over previous, unless last under two hours ago
+    if abs(now - first_tide) < abs(now - (first_tide + dt.timedelta(seconds=next_tide))):
+        first_weight += 1
+        print("1st is less than 2hrs previous: 1 point")
+    else:
+        second_weight += 3
+        print("2nd gets 3 points: 1st was not under two hours ago")
+    print("first weight: {}".format(first_weight))
+    print("second weight: {}".format(second_weight))
     return (first_weight, second_weight)
 
 
@@ -87,9 +95,11 @@ def build_message(tides):
             low_msg = '{} was at {}'.format(low_intro, str_only_low)
     else:
         first_low, second_low = low_times
+        weight_first_low, weight_second_low = weight_tides(low_times)
         str_first_low = first_low.strftime('%H:%M')
         str_second_low = second_low.strftime('%H:%M')
-        if abs(now - first_low) < abs(now - second_low):
+        #if abs(now - first_low) < abs(now - second_low):
+        if weight_first_low > weight_second_low:
             if first_low.time() > now.time():
                 low_msg = '{} will be at {}'.format(low_intro, str_first_low)
             else:
@@ -109,9 +119,11 @@ def build_message(tides):
            high_msg = '{} was at {}'.format(high_intro, str_only_high)
     else:
         first_high, second_high = high_times
+        weight_first_high , weight_second_high = weight_tides(high_times)
         str_first_high = first_high.strftime('%H:%M')
         str_second_high = second_high.strftime('%H:%M')
-        if abs(now - first_high) < abs(now - second_high):
+        #if abs(now - first_high) < abs(now - second_high):
+        if weight_first_high > weight_second_high:
             if first_high.time() > now.time():
                 high_msg = '{} will be at {}'.format(high_intro, str_first_high)
             else:
