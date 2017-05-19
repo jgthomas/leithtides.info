@@ -35,7 +35,7 @@ def get_date_object(tides):
 
 
 def normalise_now():
-    """ 
+    """
     Set a date object to the time now, factoring out year, month
     and day to match the values in the tide datetime objects.
 
@@ -59,12 +59,13 @@ def weight_tides(tides, now=None):
     first_weight = 0
     second_weight = 0
 
-    next_tide = 4 * (60 * 60)
+    threshold = 4 * (60 * 60)
+    opposite_tide_window = first_tide + dt.timedelta(seconds=threshold)
 
     if now is None:
         now = normalise_now()
 
-    if abs(now - first_tide) < abs(now - (first_tide + dt.timedelta(seconds=next_tide))):
+    if abs(now - first_tide) < abs(now - opposite_tide_window):
         first_weight += 1
     else:
         second_weight += 1
@@ -74,7 +75,9 @@ def weight_tides(tides, now=None):
 def build_message(tides, now=None):
     low_intro = 'Low tide in leith'
     high_intro = 'High tide'
-    
+    future = 'will be at'
+    past = 'was at'
+
     low_times, high_times = tides
 
     if now is None:
@@ -85,51 +88,51 @@ def build_message(tides, now=None):
         only_low, *_ = low_times
         str_only_low = only_low.strftime('%H:%M')
         if only_low.time() > now.time():
-            low_msg = '{} will be at {}'.format(low_intro, str_only_low)
+            low_msg = '{} {} {}'.format(low_intro, future, str_only_low)
         else:
-            low_msg = '{} was at {}'.format(low_intro, str_only_low)
+            low_msg = '{} {} {}'.format(low_intro, past, str_only_low)
     else:
         first_low, second_low = low_times
         weight_first_low, weight_second_low = weight_tides(low_times)
 
         str_first_low = first_low.strftime('%H:%M')
         str_second_low = second_low.strftime('%H:%M')
-        
+
         if weight_first_low > weight_second_low:
             if first_low.time() > now.time():
-                low_msg = '{} will be at {}'.format(low_intro, str_first_low)
+                low_msg = '{} {} {}'.format(low_intro, future, str_first_low)
             else:
-                low_msg = '{} was at {}'.format(low_intro, str_first_low)
+                low_msg = '{} {} {}'.format(low_intro, past, str_first_low)
         else:
             if second_low.time() > now.time():
-                low_msg = '{} will be at {}'.format(low_intro, str_second_low)
+                low_msg = '{} {} {}'.format(low_intro, future, str_second_low)
             else:
-                low_msg = '{} was at {}'.format(low_intro, str_second_low)
+                low_msg = '{} {} {}'.format(low_intro, past, str_second_low)
 
     # Generate high tide message
     if len(high_times) == 1:
-       only_high, *_ = high_times
-       str_only_high = only_high.strftime('%H:%M')
-       if only_high.time() > now.time():
-           high_msg = '{} will be at {}'.format(high_intro, str_only_high)
-       else:
-           high_msg = '{} was at {}'.format(high_intro, str_only_high)
+        only_high, *_ = high_times
+        str_only_high = only_high.strftime('%H:%M')
+        if only_high.time() > now.time():
+            high_msg = '{} {} {}'.format(high_intro, future, str_only_high)
+        else:
+            high_msg = '{} {} {}'.format(high_intro, past, str_only_high)
     else:
         first_high, second_high = high_times
-        weight_first_high , weight_second_high = weight_tides(high_times)
+        weight_first_high, weight_second_high = weight_tides(high_times)
 
         str_first_high = first_high.strftime('%H:%M')
         str_second_high = second_high.strftime('%H:%M')
 
         if weight_first_high > weight_second_high:
             if first_high.time() > now.time():
-                high_msg = '{} will be at {}'.format(high_intro, str_first_high)
+                high_msg = '{} {} {}'.format(high_intro, future, str_first_high)
             else:
-                high_msg = '{} was at {}'.format(high_intro, str_first_high)
+                high_msg = '{} {} {}'.format(high_intro, past, str_first_high)
         else:
             if second_high.time() > now.time():
-                high_msg = '{} will be at {}'.format(high_intro, str_second_high)
+                high_msg = '{} {} {}'.format(high_intro, future, str_second_high)
             else:
-                high_msg = '{} was at {}'.format(high_intro, str_second_high)
+                high_msg = '{} {} {}'.format(high_intro, past, str_second_high)
 
     return '. '.join([low_msg, high_msg])
