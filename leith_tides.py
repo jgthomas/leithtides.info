@@ -2,6 +2,7 @@
 
 import json
 import os
+import datetime as dt
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
@@ -27,6 +28,42 @@ def load_tide_data(filename):
     with open(filename, 'r') as infile:
         todays_tides = json.load(infile)
     return todays_tides
+
+
+def get_date_object(tides):
+    low_tide, high_tide = load_tide_data(tides)
+    low = [dt.datetime.strptime(tide, '%H:%M') for tide in low_tide]
+    high = [dt.datetime.strptime(tide, '%H:%M') for tide in high_tide]
+    return [low, high]
+
+
+def build_message(tides):
+    low_intro = 'low tide in leith'
+    high_intro = 'high tide'
+    now = dt.datetime.now()
+    low_times, high_times = get_date_object(tides)
+    if len(low_times) == 1:
+        only_low, *_ = low_times
+        str_only_low = only_low.strftime('%H:%M')
+        if only_low.time() > now.time():
+            low_msg = '{} will be at {}'.format(low_intro, str_only_low)
+        else:
+            low_msg = '{} was at {}'.format(low_intro, str_only_low)
+    else:
+        first_low, second_low = low_times
+        str_first_low = first_low.strftime('%H:%M')
+        str_second_low = second_low.strftime('%H:%M')
+        if (now - first_low) < (now - second_low):
+            if first_low.time() > now.time():
+                low_msg = '{} will be at {}'.format(low_intro, str_first_low)
+            else:
+                low_msg = '{} was at {}'.format(low_intro, str_first_low)
+        else:
+            if second_low.time() > now.time():
+                low_msg = '{} will be at {}'.format(low_intro, str_second_low)
+            else:
+                low_msg = '{} was at {}'.format(low_intro, str_second_low)
+    return low_msg
 
 
 def tide_message(tides):
