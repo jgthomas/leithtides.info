@@ -70,8 +70,8 @@ def weight_tides(tides, now=None):
 
 
 def build_message(tides, now=None):
-    low_intro = 'low tide in leith'
-    high_intro = 'high tide'
+    low_intro = 'Low tide in leith'
+    high_intro = 'High tide'
     
     low_times, high_times = tides
 
@@ -130,4 +130,4 @@ def build_message(tides, now=None):
             else:
                 high_msg = '{} was at {}'.format(high_intro, str_second_high)
 
-    return ' '.join([low_msg, high_msg])
+    return '. '.join([low_msg, high_msg])
