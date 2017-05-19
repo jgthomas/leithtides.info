@@ -4,6 +4,8 @@ import json
 import os
 import datetime as dt
 
+import tide_update
+
 
 def load_tide_data(filename):
     """

@@ -3,7 +3,6 @@
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
-import tide_update
 from tide_response import load_tide_data, get_date_object, build_message
 from constants import TIDE_FILE
 
