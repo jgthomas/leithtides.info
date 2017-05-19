@@ -42,15 +42,41 @@ def normalise_now():
     return dt.datetime(1900, 1, 1, time_now.hour, time_now.minute)
 
 
+def weight_tides(tides):
+    first_tide, second_tide = tides
+    first_weight = 0
+    second_weight = 0
+    next_tide = 4 * 3600
+    peak_start = dt.datetime(1900, 1, 1, 8, 59)
+    peak_end = dt.datetime(1900, 1, 1, 21, 59)
+    now = normalise_now()
+
+    # Which is closer to now
+    if abs(now - first_tide) < abs(now - second_tide):
+        first_weight += 1
+    else:
+        second_weight += 1
+
+    # Are they at a 'peak' time
+    if first_tide > peak_start and first_tide < peak_end:
+        first_weight += 1
+    if second_tide > peak_start and second_tide < peak_end:
+        second_weight += 1
+
+    # Are they 'too close' to a high/low tide
+    #if abs(now - first_tide) < abs(first_tide - dt.timedelta(seconds=next_tide)):
+    #    first_weight += 1
+    #if abs(now - second_tide) < abs(second_tide - dt.timedelta(seconds=next_tide)):
+    #    first_weight += 1
+    return (first_weight, second_weight)
+
+
 def build_message(tides):
     low_intro = 'low tide in leith'
     high_intro = 'high tide'
     
     now = normalise_now()
-    print(now)
     low_times, high_times = get_date_object(tides)
-    print(low_times)
-    print(high_times)
 
     if len(low_times) == 1:
         only_low, *_ = low_times
