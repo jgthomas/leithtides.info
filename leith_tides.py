@@ -42,48 +42,57 @@ def normalise_now():
     return dt.datetime(1900, 1, 1, time_now.hour, time_now.minute)
 
 
-def weight_tides(tides):
+def weight_tides(tides, now=None):
+    """
+    Selects which of two tide times to report, based on three criteria:
+
+    1. Prefer tides closer to present time
+    2. Prefer tides during the day
+    3. Prefer upcoming tides over previous, unless previous was very recent 
+
+    tides  :  datetime objects indicating the time of two tides
+    now    :  setting a time for present, used for testing purposes
+
+    Return a score for each tide, between 0 and 5 to indicate which to report
+
+    """
     first_tide, second_tide = tides
     first_weight = 0
     second_weight = 0
+
     next_tide = 4 * (60 * 60)
-    day_start = dt.datetime(1900, 1, 1, 4, 59)
-    day_end = dt.datetime(1900, 1, 1, 21, 59)
-    now = normalise_now()
+    #day_start = dt.datetime(1900, 1, 1, 4, 59)
+    #day_end = dt.datetime(1900, 1, 1, 21, 59)
+
+    if now is None:
+        now = normalise_now()
 
     # 1. Prefer tides closer to present time
-    if abs(now - first_tide) < abs(now - second_tide):
-        first_weight += 1
-        print("1st is closer to now: 1 point")
-    else:
-        second_weight += 1
-        print("2nd is closer to now: 1 point")
+    #if abs(now - first_tide) < abs(now - second_tide):
+    #    first_weight += 1
+    #else:
+    #    second_weight += 1
 
-    # 2. Prefer tides during the day
-    if first_tide > day_start and first_tide < day_end:
-        first_weight += 1
-        print("1st is during day: 1 point")
-    if second_tide > day_start and second_tide < day_end:
-        second_weight += 1
-        print("2nd is during day: 1 point")
+    ## 2. Prefer tides during the day
+    #if first_tide > day_start and first_tide < day_end:
+    #    first_weight += 1
+    #if second_tide > day_start and second_tide < day_end:
+    #    second_weight += 1
 
-    # 3. Prefer upcoming tides over previous, unless last under two hours ago
+    # 3. Prefer upcoming tides over previous, unless under two hours ago
     if abs(now - first_tide) < abs(now - (first_tide + dt.timedelta(seconds=next_tide))):
         first_weight += 1
-        print("1st is less than 2hrs previous: 1 point")
     else:
-        second_weight += 3
-        print("2nd gets 3 points: 1st was not under two hours ago")
-    print("first weight: {}".format(first_weight))
-    print("second weight: {}".format(second_weight))
+        second_weight += 1
     return (first_weight, second_weight)
 
 
-def build_message(tides):
+def build_message(tides, now=None):
     low_intro = 'low tide in leith'
     high_intro = 'high tide'
     
-    now = normalise_now()
+    if now is None:
+        now = normalise_now()
     low_times, high_times = get_date_object(tides)
 
     if len(low_times) == 1:
@@ -98,7 +107,6 @@ def build_message(tides):
         weight_first_low, weight_second_low = weight_tides(low_times)
         str_first_low = first_low.strftime('%H:%M')
         str_second_low = second_low.strftime('%H:%M')
-        #if abs(now - first_low) < abs(now - second_low):
         if weight_first_low > weight_second_low:
             if first_low.time() > now.time():
                 low_msg = '{} will be at {}'.format(low_intro, str_first_low)
@@ -122,7 +130,6 @@ def build_message(tides):
         weight_first_high , weight_second_high = weight_tides(high_times)
         str_first_high = first_high.strftime('%H:%M')
         str_second_high = second_high.strftime('%H:%M')
-        #if abs(now - first_high) < abs(now - second_high):
         if weight_first_high > weight_second_high:
             if first_high.time() > now.time():
                 high_msg = '{} will be at {}'.format(high_intro, str_first_high)
