@@ -37,11 +37,21 @@ def get_date_object(tides):
     return [low, high]
 
 
+def normalise_now():
+    time_now = dt.datetime.now().time()
+    return dt.datetime(1900, 1, 1, time_now.hour, time_now.minute)
+
+
 def build_message(tides):
     low_intro = 'low tide in leith'
     high_intro = 'high tide'
-    now = dt.datetime.now()
+    
+    now = normalise_now()
+    print(now)
     low_times, high_times = get_date_object(tides)
+    print(low_times)
+    print(high_times)
+
     if len(low_times) == 1:
         only_low, *_ = low_times
         str_only_low = only_low.strftime('%H:%M')
@@ -53,7 +63,7 @@ def build_message(tides):
         first_low, second_low = low_times
         str_first_low = first_low.strftime('%H:%M')
         str_second_low = second_low.strftime('%H:%M')
-        if (now - first_low) < (now - second_low):
+        if abs(now - first_low) < abs(now - second_low):
             if first_low.time() > now.time():
                 low_msg = '{} will be at {}'.format(low_intro, str_first_low)
             else:
@@ -63,7 +73,30 @@ def build_message(tides):
                 low_msg = '{} will be at {}'.format(low_intro, str_second_low)
             else:
                 low_msg = '{} was at {}'.format(low_intro, str_second_low)
-    return low_msg
+
+    if len(high_times) == 1:
+       only_high, *_ = high_times
+       str_only_high = only_high.strftime('%H:%M')
+       if only_high.time() > now.time():
+           high_msg = '{} will be at {}'.format(high_intro, str_only_high)
+       else:
+           high_msg = '{} was at {}'.format(high_intro, str_only_high)
+    else:
+        first_high, second_high = high_times
+        str_first_high = first_high.strftime('%H:%M')
+        str_second_high = second_high.strftime('%H:%M')
+        if abs(now - first_high) < abs(now - second_high):
+            if first_high.time() > now.time():
+                high_msg = '{} will be at {}'.format(high_intro, str_first_high)
+            else:
+                high_msg = '{} was at {}'.format(high_intro, str_first_high)
+        else:
+            if second_high.time() > now.time():
+                high_msg = '{} will be at {}'.format(high_intro, str_second_high)
+            else:
+                high_msg = '{} was at {}'.format(high_intro, str_second_high)
+
+    return ' '.join([low_msg, high_msg])
 
 
 def tide_message(tides):
