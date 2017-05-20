@@ -105,7 +105,7 @@ def build_message(tides, now=None):
             low_msg = '{} {} {}'.format(low_intro, past, str_only_low)
     else:
         first_low, second_low = low_times
-        weight_first_low, weight_second_low = weight_tides(low_times)
+        weight_first_low, weight_second_low = weight_tides(low_times, now)
 
         str_first_low = first_low.strftime('%H:%M')
         str_second_low = second_low.strftime('%H:%M')
@@ -131,7 +131,7 @@ def build_message(tides, now=None):
             high_msg = '{} {} {}'.format(high_intro, past, str_only_high)
     else:
         first_high, second_high = high_times
-        weight_first_high, weight_second_high = weight_tides(high_times)
+        weight_first_high, weight_second_high = weight_tides(high_times, now)
 
         str_first_high = first_high.strftime('%H:%M')
         str_second_high = second_high.strftime('%H:%M')
