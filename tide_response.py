@@ -34,6 +34,10 @@ def get_date_object(tides):
     Return date objects corresponding to the two high and low
     tide times for today.
 
+    We are only interested in the time, but want to do operations that
+    require a date object, so year, month and day are set to (1900, 1, 1)
+    for all date objects.
+
     """
     low_tide, high_tide = load_tide_data(tides)
     low = [dt.datetime.strptime(tide, '%H:%M') for tide in low_tide]
