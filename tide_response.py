@@ -1,5 +1,12 @@
 
 
+"""
+Select the relevant tide based on its proximity to the current
+time, and build a tense-appropriate string for use in voice
+interfaces such as Alexa.
+
+"""
+
 import json
 import os
 import datetime as dt
@@ -46,24 +53,24 @@ def normalise_now():
 
 def weight_tides(tides, now=None):
     """
-    Select which of two tide times to report
+    Report the upcoming tide unless the previous tide was under
+    two hours ago, and thus still the reality on the ground now.
 
     tides  :  datetime objects indicating the time of two tides
     now    :  setting a time for present, used for testing purposes
 
-    Always reports the upcoming tide unless the previous tide was under
-    two hours ago, and thus still the reality on the ground now.
 
     """
-    first_tide, second_tide = tides
+    first_tide, *_ = tides
     first_weight = 0
     second_weight = 0
 
     threshold = 4 * (60 * 60)
-    opposite_tide_window = first_tide + dt.timedelta(seconds=threshold)
 
     if now is None:
         now = normalise_now()
+
+    opposite_tide_window = first_tide + dt.timedelta(seconds=threshold)
 
     if abs(now - first_tide) < abs(now - opposite_tide_window):
         first_weight += 1
@@ -73,6 +80,11 @@ def weight_tides(tides, now=None):
 
 
 def build_message(tides, now=None):
+    """
+    Return tense-appropriate string, reporting the relevant low
+    and high tides as determined by the weight_tides function.
+
+    """
     low_intro = 'Low tide in leith'
     high_intro = 'High tide'
     future = 'will be at'
