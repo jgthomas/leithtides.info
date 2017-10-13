@@ -27,7 +27,9 @@ def tide_report():
 
 @ask.intent("TodaysTides")
 def get_tides():
-    tide_report()
+    tides = get_date_object(TIDE_FILE)
+    welcome_msg = build_message(tides)
+    return statement(welcome_msg)
 
 
 if __name__ == '__main__':
