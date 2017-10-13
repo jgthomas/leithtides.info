@@ -154,11 +154,57 @@ def build_message(tides, now=None):
     return '. '.join([low_msg, high_msg])
 
 
-def full_tide_message(tides, now=None):
+def build_message(tide_data, intro, now=None):
+    future = 'will be at'
+    past = 'was at'
+
+    if now is None:
+        now = normalise_now()
+
+    if len(tide_data) == 1:
+        only_tide, *_ = tide_data
+        str_only_tide = only_tide.strftime('%H:%M')
+        if only_tide.time() > now.time():
+            tide_msg = '{} {} {}'.format(intro, future, str_only_tide)
+        else:
+            tide_msg = '{} {} {}'.format(intro, past, str_only_tide)
+    else:
+        first_tide , second_tide = tide_data
+        weight_first_tide, weight_second_tide = weight_tides(tide_data, now)
+
+        str_first_tide = first_tide.strftime('%H:%M')
+        str_second_tide = second_tide.strftime('%H:%M')
+
+        if weight_first_tide > weight_second_tide:
+            if first_tide.time() > now.time():
+                tide_msg = '{} {} {}'.format(intro, future, str_first_tide)
+            else:
+                tide_msg = '{} {} {}'.format(intro, past, str_first_tide)
+        else:
+            if second_tide.time() > now.time():
+                tide_msg = '{} {} {}'.format(intro, future, str_second_tide)
+            else:
+                tide_msg = '{} {} {}'.format(intro, past, str_second_tide)
+
+
+
+def tide_message(tide_data, specifc_tide=None, now=None):
     """
     Return full message with both low tide and high tide times.
 
     """
-    low_msg = low_tide_message(tides, now=now)
-    high_msg = high_tide_message(tides, now=now)
+    low_intro = 'Low tide in leith'
+    high_intro = 'High tide in leith'
+    high_intro_second = 'High tide'
+
+    low_times, high_times = tide_data
+
+    if specifc_tide == "low":
+        return build_message(low_times, low_intro, now=now)
+
+    if specifc_tide == "high":
+        return build_message(high_times, high_into, now=now)
+
+    low_msg = build_message(low_times, low_intro, now=now)
+    high_msg = build_message(high_times, high_intro_second, now=now)
     return '. '.join([low_msg, high_msg])
