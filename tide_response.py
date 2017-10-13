@@ -152,3 +152,13 @@ def build_message(tides, now=None):
                 high_msg = '{} {} {}'.format(high_intro, past, str_second_high)
 
     return '. '.join([low_msg, high_msg])
+
+
+def full_tide_message(tides, now=None):
+    """
+    Return full message with both low tide and high tide times.
+
+    """
+    low_msg = low_tide_message(tides, now=now)
+    high_msg = high_tide_message(tides, now=now)
+    return '. '.join([low_msg, high_msg])
