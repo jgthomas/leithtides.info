@@ -21,14 +21,16 @@ def show_tides():
 @ask.launch
 def tide_report():
     tides = get_date_object(TIDE_FILE)
-    welcome_msg = build_message(tides)
-    return statement(welcome_msg)
-
+    #welcome_msg = build_message(tides)
+    #return statement(welcome_msg)
+    response = tide_message(tides)
+    return statement(response)
 
 @ask.intent("TodaysTides")
 def get_tides():
     tides = get_date_object(TIDE_FILE)
-    return statement(tide_message(tides))
+    response = tide_message(tides)
+    return statement(response)
 
 
 if __name__ == '__main__':
