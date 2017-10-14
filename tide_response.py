@@ -83,82 +83,82 @@ def weight_tides(tides, now=None):
     return (first_weight, second_weight)
 
 
-def build_message(tides, now=None):
-    """
-    Return tense-appropriate string, reporting the relevant low
-    and high tides as determined by the weight_tides function.
-
-    """
-    low_intro = 'Low tide in leith'
-    high_intro = 'High tide'
-    future = 'will be at'
-    past = 'was at'
-
-    low_times, high_times = tides
-
-    if now is None:
-        now = normalise_now()
-
-    # Generate low tide message
-    if len(low_times) == 1:
-        only_low, *_ = low_times
-        str_only_low = only_low.strftime('%H:%M')
-        if only_low.time() > now.time():
-            low_msg = '{} {} {}'.format(low_intro, future, str_only_low)
-        else:
-            low_msg = '{} {} {}'.format(low_intro, past, str_only_low)
-    else:
-        first_low, second_low = low_times
-        weight_first_low, weight_second_low = weight_tides(low_times, now)
-
-        str_first_low = first_low.strftime('%H:%M')
-        str_second_low = second_low.strftime('%H:%M')
-
-        if weight_first_low > weight_second_low:
-            if first_low.time() > now.time():
-                low_msg = '{} {} {}'.format(low_intro, future, str_first_low)
-            else:
-                low_msg = '{} {} {}'.format(low_intro, past, str_first_low)
-        else:
-            if second_low.time() > now.time():
-                low_msg = '{} {} {}'.format(low_intro, future, str_second_low)
-            else:
-                low_msg = '{} {} {}'.format(low_intro, past, str_second_low)
-
-    # Generate high tide message
-    if len(high_times) == 1:
-        only_high, *_ = high_times
-        str_only_high = only_high.strftime('%H:%M')
-        if only_high.time() > now.time():
-            high_msg = '{} {} {}'.format(high_intro, future, str_only_high)
-        else:
-            high_msg = '{} {} {}'.format(high_intro, past, str_only_high)
-    else:
-        first_high, second_high = high_times
-        weight_first_high, weight_second_high = weight_tides(high_times, now)
-
-        str_first_high = first_high.strftime('%H:%M')
-        str_second_high = second_high.strftime('%H:%M')
-
-        if weight_first_high > weight_second_high:
-            if first_high.time() > now.time():
-                high_msg = '{} {} {}'.format(high_intro, future, str_first_high)
-            else:
-                high_msg = '{} {} {}'.format(high_intro, past, str_first_high)
-        else:
-            if second_high.time() > now.time():
-                high_msg = '{} {} {}'.format(high_intro, future, str_second_high)
-            else:
-                high_msg = '{} {} {}'.format(high_intro, past, str_second_high)
-
-    return '. '.join([low_msg, high_msg])
+#def build_message(tides, now=None):
+#    """
+#    Return tense-appropriate string, reporting the relevant low
+#    and high tides as determined by the weight_tides function.
+#
+#    """
+#    low_intro = 'Low tide in leith'
+#    high_intro = 'High tide'
+#    future = 'will be at'
+#    past = 'was at'
+#
+#    low_times, high_times = tides
+#
+#    if now is None:
+#        now = normalise_now()
+#
+#    # Generate low tide message
+#    if len(low_times) == 1:
+#        only_low, *_ = low_times
+#        str_only_low = only_low.strftime('%H:%M')
+#        if only_low.time() > now.time():
+#            low_msg = '{} {} {}'.format(low_intro, future, str_only_low)
+#        else:
+#            low_msg = '{} {} {}'.format(low_intro, past, str_only_low)
+#    else:
+#        first_low, second_low = low_times
+#        weight_first_low, weight_second_low = weight_tides(low_times, now)
+#
+#        str_first_low = first_low.strftime('%H:%M')
+#        str_second_low = second_low.strftime('%H:%M')
+#
+#        if weight_first_low > weight_second_low:
+#            if first_low.time() > now.time():
+#                low_msg = '{} {} {}'.format(low_intro, future, str_first_low)
+#            else:
+#                low_msg = '{} {} {}'.format(low_intro, past, str_first_low)
+#        else:
+#            if second_low.time() > now.time():
+#                low_msg = '{} {} {}'.format(low_intro, future, str_second_low)
+#            else:
+#                low_msg = '{} {} {}'.format(low_intro, past, str_second_low)
+#
+#    # Generate high tide message
+#    if len(high_times) == 1:
+#        only_high, *_ = high_times
+#        str_only_high = only_high.strftime('%H:%M')
+#        if only_high.time() > now.time():
+#            high_msg = '{} {} {}'.format(high_intro, future, str_only_high)
+#        else:
+#            high_msg = '{} {} {}'.format(high_intro, past, str_only_high)
+#    else:
+#        first_high, second_high = high_times
+#        weight_first_high, weight_second_high = weight_tides(high_times, now)
+#
+#        str_first_high = first_high.strftime('%H:%M')
+#        str_second_high = second_high.strftime('%H:%M')
+#
+#        if weight_first_high > weight_second_high:
+#            if first_high.time() > now.time():
+#                high_msg = '{} {} {}'.format(high_intro, future, str_first_high)
+#            else:
+#                high_msg = '{} {} {}'.format(high_intro, past, str_first_high)
+#        else:
+#            if second_high.time() > now.time():
+#                high_msg = '{} {} {}'.format(high_intro, future, str_second_high)
+#            else:
+#                high_msg = '{} {} {}'.format(high_intro, past, str_second_high)
+#
+#    return '. '.join([low_msg, high_msg])
 
 
 def build_tide_message(tide_data, intro, now=None):
     """
-    Return tense-appropriate string reporting times of tides.
+    Return tense-appropriate statement reporting times of tides.
 
-    tides  :  datetime objects indicating the time of two tides
+    tides  :  list of datetime objects of tide times
     intro  :  string to begin tide times report
     now    :  setting a time for present, used for testing purposes
 
@@ -197,9 +197,13 @@ def build_tide_message(tide_data, intro, now=None):
 
 
 
-def tide_message(tide_times, specific_tide=None, now=None):
+def tide_message(tide_times, specific_tide="both", now=None):
     """
-    Return full message with both low tide and high tide times.
+    Return response for low, high, or both tide times.
+
+    tides          :  list of datetime objects
+    specific_tide  :  "low", "high", or "both"
+    now            :  datetime object, used for testing purposes
 
     """
     low_intro = 'Low tide in leith'
