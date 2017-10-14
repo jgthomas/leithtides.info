@@ -155,6 +155,14 @@ def build_message(tides, now=None):
 
 
 def build_tide_message(tide_data, intro, now=None):
+    """
+    Return tense-appropriate string reporting times of tides.
+
+    tides  :  datetime objects indicating the time of two tides
+    intro  :  string to begin tide times report
+    now    :  setting a time for present, used for testing purposes
+
+    """
     future = 'will be at'
     past = 'was at'
 
