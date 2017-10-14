@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
-from tide_response import load_tide_data, get_date_object, build_message, tide_message
+from tide_response import load_tide_data, get_date_object, tide_message
 from constants import TIDE_FILE
 
 
