@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_ask import Ask, statement
 
-from tide_response import load_tide_data, get_date_object, build_message
+from tide_response import load_tide_data, get_date_object, build_message, tide_message
 from constants import TIDE_FILE
 
 
@@ -28,8 +28,7 @@ def tide_report():
 @ask.intent("TodaysTides")
 def get_tides():
     tides = get_date_object(TIDE_FILE)
-    welcome_msg = build_message(tides)
-    return statement(welcome_msg)
+    return statement(tide_message(tides))
 
 
 if __name__ == '__main__':

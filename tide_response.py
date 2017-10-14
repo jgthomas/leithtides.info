@@ -154,7 +154,7 @@ def build_message(tides, now=None):
     return '. '.join([low_msg, high_msg])
 
 
-def build_message(tide_data, intro, now=None):
+def build_tide_message(tide_data, intro, now=None):
     future = 'will be at'
     past = 'was at'
 
@@ -185,10 +185,11 @@ def build_message(tide_data, intro, now=None):
                 tide_msg = '{} {} {}'.format(intro, future, str_second_tide)
             else:
                 tide_msg = '{} {} {}'.format(intro, past, str_second_tide)
+    return tide_msg
 
 
 
-def tide_message(tide_data, specifc_tide=None, now=None):
+def tide_message(tide_times, specific_tide=None, now=None):
     """
     Return full message with both low tide and high tide times.
 
@@ -197,14 +198,14 @@ def tide_message(tide_data, specifc_tide=None, now=None):
     high_intro = 'High tide in leith'
     high_intro_second = 'High tide'
 
-    low_times, high_times = tide_data
+    if specific_tide == "low":
+        return build_tide_message(tide_times, low_intro, now=now)
 
-    if specifc_tide == "low":
-        return build_message(low_times, low_intro, now=now)
+    if specific_tide == "high":
+        return build_tide_message(tide_times, high_intro, now=now)
 
-    if specifc_tide == "high":
-        return build_message(high_times, high_into, now=now)
+    low_times, high_times = tide_times
 
-    low_msg = build_message(low_times, low_intro, now=now)
-    high_msg = build_message(high_times, high_intro_second, now=now)
+    low_msg = build_tide_message(low_times, low_intro, now=now)
+    high_msg = build_tide_message(high_times, high_intro_second, now=now)
     return '. '.join([low_msg, high_msg])
