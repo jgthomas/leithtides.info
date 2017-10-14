@@ -21,8 +21,6 @@ def show_tides():
 @ask.launch
 def tide_report():
     tides = get_date_object(TIDE_FILE)
-    #welcome_msg = build_message(tides)
-    #return statement(welcome_msg)
     response = tide_message(tides)
     return statement(response)
 
@@ -30,6 +28,18 @@ def tide_report():
 def get_tides():
     tides = get_date_object(TIDE_FILE)
     response = tide_message(tides)
+    return statement(response)
+
+@ask.intent("LowTide")
+def low_tide_reponse():
+    low_tides, _ = get_date_object(TIDE_FILE)
+    reponse = tide_message(low_tides, specific_tide="low")
+    return statement(response)
+
+@ask.intent("HighTide")
+def low_tide_reponse():
+    _, high_tides = get_date_object(TIDE_FILE)
+    reponse = tide_message(high_tides, specific_tide="high")
     return statement(response)
 
 
