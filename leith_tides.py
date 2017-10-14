@@ -33,13 +33,13 @@ def get_tides():
 @ask.intent("LowTide")
 def low_tide_reponse():
     low_tides, _ = get_date_object(TIDE_FILE)
-    reponse = tide_message(low_tides, specific_tide="low")
+    response = tide_message(low_tides, specific_tide="low")
     return statement(response)
 
 @ask.intent("HighTide")
 def low_tide_reponse():
     _, high_tides = get_date_object(TIDE_FILE)
-    reponse = tide_message(high_tides, specific_tide="high")
+    response = tide_message(high_tides, specific_tide="high")
     return statement(response)
 
 
